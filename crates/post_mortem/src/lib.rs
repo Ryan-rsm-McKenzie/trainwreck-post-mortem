@@ -61,7 +61,7 @@ pub fn real_main<R: Read>(stream: &mut R) -> anyhow::Result<()> {
     let result = report_crash(&eulogy.crash_log_path);
     match result {
         Ok(Action::OpenCrashLog) | Err(_) => {
-            if settings::auto_open() {
+            if settings::auto_open_log() {
                 let parameters = HSTRING::from(eulogy.crash_log_path.as_os_str());
                 unsafe { Shell::ShellExecuteW(None, None, &parameters, None, None, SW_SHOW) };
             }

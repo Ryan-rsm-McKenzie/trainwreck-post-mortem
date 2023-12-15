@@ -24,14 +24,14 @@ extern "C" {
 #[derive(Deserialize)]
 #[serde(rename_all = "PascalCase", default)]
 struct General {
-    auto_open: bool,
+    auto_open_log: bool,
     prompt_upload: bool,
 }
 
 impl Default for General {
     fn default() -> Self {
         Self {
-            auto_open: true,
+            auto_open_log: true,
             prompt_upload: true,
         }
     }
@@ -96,8 +96,8 @@ lazy_static::lazy_static! {
     static ref CONFIG: CachedConfig = CachedConfig::new();
 }
 
-pub fn auto_open() -> bool {
-    CONFIG.config.general.auto_open
+pub fn auto_open_log() -> bool {
+    CONFIG.config.general.auto_open_log
 }
 
 pub fn prompt_upload() -> bool {
@@ -113,11 +113,11 @@ mod tests {
     fn test_config_loading() -> anyhow::Result<()> {
         let config_string = r#"
 			[General]
-			AutoOpen = true
+			AutoOpenLog = true
 			PromptUpload = false
 		"#;
         let Config { general } = toml::from_str(config_string).context("Failed to parse config")?;
-        assert_eq!(general.auto_open, true);
+        assert_eq!(general.auto_open_log, true);
         assert_eq!(general.prompt_upload, false);
         Ok(())
     }
