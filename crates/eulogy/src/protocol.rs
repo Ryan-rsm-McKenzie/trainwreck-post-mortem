@@ -2,7 +2,7 @@ use crate::streaming::{Sink, Source};
 use std::{
     ffi::OsString,
     io::{self, Read, Write},
-    os::windows::ffi::{OsStrExt, OsStringExt},
+    os::windows::prelude::*,
     path::PathBuf,
 };
 
