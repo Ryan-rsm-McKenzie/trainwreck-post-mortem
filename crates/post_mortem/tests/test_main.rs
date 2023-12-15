@@ -1,6 +1,6 @@
 use anyhow::Context as _;
 use eulogy::protocol::Eulogy;
-use post_mortem as tw;
+use post_mortem as pm;
 use std::{
     fs::File,
     io::{Cursor, Write},
@@ -22,5 +22,5 @@ fn test_main() -> anyhow::Result<()> {
         .context("Failed to write eulogy to stream")?;
     stream.set_position(0);
 
-    tw::real_main(&mut stream).context("Failure in real main")
+    pm::real_main(&mut stream).context("Failure in real main")
 }
