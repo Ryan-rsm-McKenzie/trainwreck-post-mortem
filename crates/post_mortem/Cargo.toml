@@ -5,6 +5,11 @@ name = "post_mortem"
 publish = false
 version = "1.0.0"
 
+[package.metadata.winres]
+FileDescription = "Post-mortem crash reporting"
+LegalCopyright = "(c) 2023 Ryan McKenzie"
+ProductName = "Trainwreck Post Mortem"
+
 [dependencies]
 anyhow = "1.0.75"
 curl = "0.4.44"
@@ -15,3 +20,6 @@ memmap2 = "0.9.0"
 serde = {version = "1.0.193", features = ["derive"]}
 toml = {version = "0.8.8", default-features = false, features = ["parse"]}
 windows = {version = "0.52.0", features = ["Win32_Foundation", "Win32_System_LibraryLoader", "Win32_System_SystemServices", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging"]}
+
+[build-dependencies]
+winres = "0.1.12"
