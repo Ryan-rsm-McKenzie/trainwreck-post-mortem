@@ -1,5 +1,3 @@
-#![allow(clippy::unsafe_derive_deserialize)]
-
 use crate::error;
 use anyhow::Context;
 use serde::Deserialize;
@@ -45,7 +43,11 @@ struct Config {
     general: General,
 }
 
-impl Config {
+struct CachedConfig {
+    config: Config,
+}
+
+impl CachedConfig {
     fn get_module_file_path(handle: HMODULE) -> anyhow::Result<PathBuf> {
         let mut filename = Vec::<u16>::new();
         filename.resize_with(MAX_PATH as usize, Default::default);
@@ -72,33 +74,34 @@ impl Config {
     pub fn new() -> Self {
         let image_base = unsafe { ptr::addr_of!(__ImageBase) };
         let self_handle = HMODULE(image_base as isize);
-        Self::get_module_file_path(self_handle)
+        let config = Self::get_module_file_path(self_handle)
             .and_then(|mut file_path| {
                 file_path.set_file_name("post_mortem.toml");
                 match fs::read_to_string(&file_path) {
-                    Ok(file_contents) => toml::from_str::<Self>(&file_contents)
+                    Ok(file_contents) => toml::from_str::<Config>(&file_contents)
                         .context("Failed to parse config from file"),
-                    Err(err) if err.kind() == io::ErrorKind::NotFound => Ok(Self::default()),
+                    Err(err) if err.kind() == io::ErrorKind::NotFound => Ok(Config::default()),
                     Err(err) => anyhow::bail!("Failed to open config file: {err:?}"),
                 }
             })
             .unwrap_or_else(|err| {
                 error::report(&err);
-                Self::default()
-            })
+                Config::default()
+            });
+        Self { config }
     }
 }
 
 lazy_static::lazy_static! {
-    static ref CONFIG: Config = Config::new();
+    static ref CONFIG: CachedConfig = CachedConfig::new();
 }
 
 pub fn auto_open() -> bool {
-    CONFIG.general.auto_open
+    CONFIG.config.general.auto_open
 }
 
 pub fn prompt_upload() -> bool {
-    CONFIG.general.prompt_upload
+    CONFIG.config.general.prompt_upload
 }
 
 #[cfg(test)]
