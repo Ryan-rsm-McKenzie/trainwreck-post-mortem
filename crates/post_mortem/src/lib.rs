@@ -113,17 +113,17 @@ fn upload_crash_log(crash_log: &Path) -> anyhow::Result<Url> {
         .context("Post response was not valid utf-8")
 }
 
-enum Decision {
-    ExitNow,
+enum Action {
+    OpenCrashLog,
     UploadCrashLog,
 }
 
-fn report_crash(crash_log: &Path) -> Decision {
-    let crash_log = crash_log.to_string_lossy();
+fn report_crash(crash_log: &Path) -> anyhow::Result<Action> {
     let message = format!(
-        "The game has crashed.\n\
-		A crash log has been written to: {crash_log}\n\
-		Do you want to upload your crash log to pastebin for easy sharing?"
+        "The game has crashed.\n\n\
+		A crash log has been written to: {}\n\n\
+		Would you like to upload your crash log to pastebin for easy sharing?",
+        crash_log.to_string_lossy()
     );
     let message = HSTRING::from(message);
     let result = unsafe {
@@ -134,22 +134,27 @@ fn report_crash(crash_log: &Path) -> Decision {
             MB_YESNO | MB_DEFBUTTON2 | MB_ICONWARNING,
         )
     };
+
     match result {
-        IDYES => Decision::UploadCrashLog,
-        _ => Decision::ExitNow,
+        IDYES => {
+            let url = upload_crash_log(crash_log).context("Failed to upload crash log")?;
+            let url = HSTRING::from(url.0);
+            unsafe { Shell::ShellExecuteW(None, None, &url, None, None, SW_SHOW) };
+            Ok(Action::UploadCrashLog)
+        }
+        _ => Ok(Action::OpenCrashLog),
     }
 }
 
 pub fn real_main<R: Read>(stream: &mut R) -> anyhow::Result<()> {
     let eulogy = Eulogy::read_from(stream).context("Failed to read eulogy from stdin")?;
-    match report_crash(&eulogy.crash_log_path) {
-        Decision::ExitNow => (),
-        Decision::UploadCrashLog => {
-            let url =
-                upload_crash_log(&eulogy.crash_log_path).context("Failed to upload crash log")?;
-            let url = HSTRING::from(url.0);
-            unsafe { Shell::ShellExecuteW(None, None, &url, None, None, SW_SHOW) };
+    let result = report_crash(&eulogy.crash_log_path);
+    match result {
+        Ok(Action::OpenCrashLog) | Err(_) => {
+            let parameters = HSTRING::from(eulogy.crash_log_path.as_os_str());
+            unsafe { Shell::ShellExecuteW(None, None, &parameters, None, None, SW_SHOW) };
         }
+        Ok(Action::UploadCrashLog) => (),
     };
-    Ok(())
+    result.map(|_| ())
 }
