@@ -1,11 +1,11 @@
 use anyhow::Context as _;
+use eulogy::protocol::Eulogy;
+use post_mortem as tw;
 use std::{
     fs::File,
     io::{Cursor, Write},
     path::Path,
 };
-use trainwreck_eulogy::protocol::Eulogy;
-use trainwreck_post_mortem as tw;
 
 #[test]
 fn test_main() -> anyhow::Result<()> {

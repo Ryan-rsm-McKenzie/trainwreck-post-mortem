@@ -1,6 +1,6 @@
 [package]
 edition = "2021"
-name = "trainwreck_eulogy"
+name = "eulogy"
 publish = false
 version = "1.0.0"
 

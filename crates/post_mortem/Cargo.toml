@@ -1,7 +1,7 @@
 [package]
 authors = ["Ryan McKenzie"]
 edition = "2021"
-name = "trainwreck_post_mortem"
+name = "post_mortem"
 publish = false
 version = "1.0.0"
 
@@ -10,5 +10,5 @@ anyhow = "1.0.75"
 curl = "0.4.44"
 fast32 = "1.0.1"
 memmap2 = "0.9.0"
-trainwreck_eulogy = {path = "../trainwreck_eulogy"}
+eulogy = {path = "../eulogy"}
 windows = {version = "0.52.0", features = ["Win32_Foundation", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging"]}

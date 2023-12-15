@@ -1,5 +1,5 @@
+use post_mortem::*;
 use std::io;
-use trainwreck_post_mortem::*;
 
 fn main() -> anyhow::Result<()> {
     let mut stream = io::stdin().lock();

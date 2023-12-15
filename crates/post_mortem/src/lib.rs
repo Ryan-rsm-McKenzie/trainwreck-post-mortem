@@ -3,6 +3,7 @@
 
 use anyhow::Context as _;
 use curl::easy::Easy;
+use eulogy::protocol::Eulogy;
 use fast32::base64::RFC4648;
 use memmap2::MmapOptions;
 use std::{
@@ -10,7 +11,6 @@ use std::{
     io::{Read, Write},
     path::Path,
 };
-use trainwreck_eulogy::protocol::Eulogy;
 use windows::{
     core::HSTRING,
     Win32::UI::{
