@@ -1,0 +1,11 @@
+[package]
+edition = "2021"
+name = "trainwreck_eulogy"
+publish = false
+version = "1.0.0"
+
+[dependencies]
+thiserror = "1.0.50"
+
+[dev-dependencies]
+anyhow = "1.0.75"

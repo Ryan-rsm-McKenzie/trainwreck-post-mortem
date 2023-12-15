@@ -1,0 +1,8 @@
+[package]
+authors = ["Ryan McKenzie"]
+edition = "2021"
+name = "trainwreck_post_mortem"
+publish = false
+version = "1.0.0"
+
+[dependencies]
