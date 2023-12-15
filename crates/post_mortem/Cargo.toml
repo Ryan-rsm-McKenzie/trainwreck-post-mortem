@@ -10,5 +10,8 @@ anyhow = "1.0.75"
 curl = "0.4.44"
 eulogy = {path = "../eulogy"}
 fast32 = "1.0.1"
+lazy_static = "1.4.0"
 memmap2 = "0.9.0"
-windows = {version = "0.52.0", features = ["Win32_Foundation", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging"]}
+serde = {version = "1.0.193", features = ["derive"]}
+toml = {version = "0.8.8", default-features = false, features = ["parse"]}
+windows = {version = "0.52.0", features = ["Win32_Foundation", "Win32_System_LibraryLoader", "Win32_System_SystemServices", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging"]}
