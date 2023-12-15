@@ -44,7 +44,7 @@ fn report_crash(crash_log: &Path) -> anyhow::Result<Action> {
         match result {
             IDYES => {
                 let url =
-                    upload::upload_crash_log(crash_log).context("Failed to upload crash log")?;
+                    upload::post_crash_log(crash_log).context("Failed to upload crash log")?;
                 let url = HSTRING::from(url.0);
                 unsafe { Shell::ShellExecuteW(None, None, &url, None, None, SW_SHOW) };
                 Ok(Action::UploadCrashLog)

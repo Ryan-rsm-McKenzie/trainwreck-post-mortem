@@ -66,7 +66,7 @@ fn encode_post(easy: &mut Easy, crash_log: &Path) -> anyhow::Result<String> {
 #[repr(transparent)]
 pub struct Url(pub String);
 
-pub fn upload_crash_log(crash_log: &Path) -> anyhow::Result<Url> {
+pub fn post_crash_log(crash_log: &Path) -> anyhow::Result<Url> {
     let mut post_response = Vec::new();
     {
         let mut easy = Easy::new();

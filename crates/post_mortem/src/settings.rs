@@ -83,7 +83,7 @@ impl Config {
                 }
             })
             .unwrap_or_else(|err| {
-                error::report_error(&err);
+                error::report(&err);
                 Self::default()
             })
     }
