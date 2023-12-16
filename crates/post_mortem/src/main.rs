@@ -1,9 +1,8 @@
 use post_mortem::*;
-use std::io;
+use std::env;
 
 fn main() {
-    let mut stream = io::stdin().lock();
-    if let Err(err) = real_main(&mut stream) {
+    if let Err(err) = real_main(env::args_os()) {
         error::report(&err);
     }
 }

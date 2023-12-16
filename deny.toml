@@ -243,6 +243,8 @@ skip = [
 # by default infinite.
 skip-tree = [
   {name = "windows", version = "*"},
+  {name = "windows-sys", version = "*"},
+  {name = "winres", version = "*"},
 ]
 
 # This section is considered when running `cargo deny check sources`.

@@ -2,8 +2,8 @@
 #![allow(clippy::missing_errors_doc)]
 
 use anyhow::Context as _;
-use eulogy::protocol::Eulogy;
-use std::{io::Read, path::Path};
+use clap::Parser;
+use std::{convert::Into, ffi::OsString, iter::IntoIterator, path::Path};
 use windows::{
     core::HSTRING,
     Win32::UI::{
@@ -56,13 +56,22 @@ fn report_crash(crash_log: &Path) -> anyhow::Result<Action> {
     }
 }
 
-pub fn real_main<R: Read>(stream: &mut R) -> anyhow::Result<()> {
-    let eulogy = Eulogy::read_from(stream).context("Failed to read eulogy from stdin")?;
-    let result = report_crash(&eulogy.crash_log_path);
+#[derive(Parser)]
+struct Args {
+    crash_log_path: OsString,
+}
+
+pub fn real_main<I, T>(args: I) -> anyhow::Result<()>
+where
+    I: IntoIterator<Item = T>,
+    T: Into<OsString> + Clone,
+{
+    let args = Args::try_parse_from(args).context("Failed to parse arguments from command line")?;
+    let result = report_crash(Path::new(&args.crash_log_path));
     match result {
         Ok(Action::OpenCrashLog) | Err(_) => {
             if settings::auto_open_log() {
-                let parameters = HSTRING::from(eulogy.crash_log_path.as_os_str());
+                let parameters = HSTRING::from(&args.crash_log_path);
                 unsafe { Shell::ShellExecuteW(None, None, &parameters, None, None, SW_SHOW) };
             }
         }
