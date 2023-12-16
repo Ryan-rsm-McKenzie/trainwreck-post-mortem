@@ -36,7 +36,7 @@ const API_KEY: EncryptedString<'_> =
 const USER_AGENT: EncryptedString<'_> = EncryptedString::new(b"dHNsd21peWg=");
 
 fn encode_post(easy: &mut Easy, crash_log: &Path) -> anyhow::Result<String> {
-    let api_key = API_KEY.decrypt().context("Failed to decript api key")?;
+    let api_key = API_KEY.decrypt().context("Failed to decrypt api key")?;
     let paste_name = {
         let file_name = crash_log
             .file_name()
